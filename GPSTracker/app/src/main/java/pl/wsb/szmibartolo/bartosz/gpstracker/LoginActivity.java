@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.Button;
 
 import pl.wsb.szmibartolo.bartosz.gpstracker.databinding.ActivityLoginBinding;
+import pl.wsb.szmibartolo.bartosz.gpstracker.storage.SharedPreferencesStorage;
 import pl.wsb.szmibartolo.bartosz.gpstracker.viewmodels.LoginViewModel;
 
 public class LoginActivity extends AppCompatActivity {
@@ -20,7 +21,7 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         bindings = DataBindingUtil.setContentView(this, R.layout.activity_login);
-        bindings.setViewModel(new LoginViewModel());
+        bindings.setViewModel(new LoginViewModel(new SharedPreferencesStorage(this)));
     }
 
 

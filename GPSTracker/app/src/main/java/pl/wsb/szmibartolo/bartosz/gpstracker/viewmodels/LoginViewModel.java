@@ -7,6 +7,8 @@ import android.databinding.ObservableField;
 import android.view.View;
 
 import pl.wsb.szmibartolo.bartosz.gpstracker.MainActivity;
+import pl.wsb.szmibartolo.bartosz.gpstracker.models.User;
+import pl.wsb.szmibartolo.bartosz.gpstracker.storage.SharedPreferencesStorage;
 
 /**
  * Created by Maciej on 2016-12-12.
@@ -20,7 +22,16 @@ public class LoginViewModel {
     public ObservableField<String> password = new ObservableField<>("");
     public ObservableBoolean enableLoginButton = new ObservableBoolean(false);
 
-    public LoginViewModel() {
+    private User user;
+    private SharedPreferencesStorage sharedPreferencesStorage;
+
+    public LoginViewModel(SharedPreferencesStorage sharedPreferencesStorage) {
+        this.sharedPreferencesStorage = sharedPreferencesStorage;
+        user = sharedPreferencesStorage.loadUser();
+
+        login.set(user.getLogin());
+        password.set(user.getPassword());
+
         editTextPropertyListener = new android.databinding.Observable.OnPropertyChangedCallback() {
             @Override
             public void onPropertyChanged(android.databinding.Observable observable, int i) {
@@ -33,6 +44,9 @@ public class LoginViewModel {
     }
 
     public void onClickLoginButton(View view) {
+        user = new User(login.get(), password.get());
+        sharedPreferencesStorage.saveUser(user);
+
         Context context = view.getContext();
         context.startActivity(new Intent(context, MainActivity.class));
     }
@@ -42,4 +56,5 @@ public class LoginViewModel {
         boolean isSomeTextInPassword = password.get() != null && password.get().length() > 0;
         enableLoginButton.set(isSomeTextInLogin && isSomeTextInPassword);
     }
+
 }
