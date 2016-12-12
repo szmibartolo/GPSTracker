@@ -1,6 +1,5 @@
 package pl.wsb.szmibartolo.bartosz.gpstracker.storage;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 
@@ -13,18 +12,20 @@ import pl.wsb.szmibartolo.bartosz.gpstracker.models.User;
 
 public class SharedPreferencesStorage {
 
+    private static final String SHERED_PREF = "SharedPreferencesStorage";
+
     private static final String USER_KEY_LOGIN = "USER_KEY_LOGIN";
     private static final String USER_KEY_PASS = "USER_KEY_PASS";
     private static final String STAN_KEY = "STAN_KEY";
 
-    private Activity activity;
+    private Context context;
 
-    public SharedPreferencesStorage(Activity activity) {
-        this.activity = activity;
+    public SharedPreferencesStorage(Context context) {
+        this.context = context;
     }
 
     public void saveUser(User user) {
-        SharedPreferences sharedPref = activity.getPreferences(Context.MODE_PRIVATE);
+        SharedPreferences sharedPref = context.getSharedPreferences(SHERED_PREF, 0);
         SharedPreferences.Editor editor = sharedPref.edit();
         editor.putString(USER_KEY_LOGIN, user.getLogin());
         editor.putString(USER_KEY_PASS, user.getPassword());
@@ -32,7 +33,7 @@ public class SharedPreferencesStorage {
     }
 
     public User loadUser() {
-        SharedPreferences sharedPref = activity.getPreferences(Context.MODE_PRIVATE);
+        SharedPreferences sharedPref = context.getSharedPreferences(SHERED_PREF, 0);
 
         User user = new User();
         user.setLogin(sharedPref.getString(USER_KEY_LOGIN, ""));
@@ -42,19 +43,15 @@ public class SharedPreferencesStorage {
     }
 
     public void saveStan(Stan stan) {
-        SharedPreferences sharedPref = activity.getPreferences(Context.MODE_PRIVATE);
+        SharedPreferences sharedPref = context.getSharedPreferences(SHERED_PREF, 0);
         SharedPreferences.Editor editor = sharedPref.edit();
-        int s = stan.ordinal();
-        editor.putInt(STAN_KEY, s);
+        editor.putInt(STAN_KEY, stan.ordinal());
         editor.commit();
 
     }
 
     public Stan loadStan() {
-        SharedPreferences sharedPref = activity.getPreferences(Context.MODE_PRIVATE);
-
-        int s = sharedPref.getInt(STAN_KEY, 0);
-
-        return Stan.values()[s];
+        SharedPreferences sharedPref = context.getSharedPreferences(SHERED_PREF, 0);
+        return Stan.values()[sharedPref.getInt(STAN_KEY, 0)];
     }
 }
