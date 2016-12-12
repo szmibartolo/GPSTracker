@@ -17,4 +17,8 @@
     <string name="password">Password</string>
     <string name="log_in">Log In</string>
     <string name="title_activity_main">MainActivity</string>
+    <string name="start_work">Start work</string>
+    <string name="end_work">End Work</string>
+    <string name="go_to_break">go to break</string>
+    <string name="end_break">end break</string>
 </resources>

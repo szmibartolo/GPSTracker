@@ -7,6 +7,7 @@ import android.databinding.ObservableField;
 import android.view.View;
 
 import pl.wsb.szmibartolo.bartosz.gpstracker.MainActivity;
+import pl.wsb.szmibartolo.bartosz.gpstracker.models.Stan;
 import pl.wsb.szmibartolo.bartosz.gpstracker.models.User;
 import pl.wsb.szmibartolo.bartosz.gpstracker.storage.SharedPreferencesStorage;
 
@@ -17,6 +18,7 @@ import pl.wsb.szmibartolo.bartosz.gpstracker.storage.SharedPreferencesStorage;
 public class LoginViewModel {
 
     private final android.databinding.Observable.OnPropertyChangedCallback editTextPropertyListener;
+    private Stan stan;
 
     public ObservableField<String> login = new ObservableField<>("");
     public ObservableField<String> password = new ObservableField<>("");
@@ -28,6 +30,11 @@ public class LoginViewModel {
     public LoginViewModel(SharedPreferencesStorage sharedPreferencesStorage) {
         this.sharedPreferencesStorage = sharedPreferencesStorage;
         user = sharedPreferencesStorage.loadUser();
+        stan = sharedPreferencesStorage.loadStan();
+
+        if (stan == Stan.LOGGEDIN) {
+            // to do load next activity
+        }
 
         login.set(user.getLogin());
         password.set(user.getPassword());
@@ -46,7 +53,7 @@ public class LoginViewModel {
     public void onClickLoginButton(View view) {
         user = new User(login.get(), password.get());
         sharedPreferencesStorage.saveUser(user);
-
+sharedPreferencesStorage.saveStan(Stan.LOGGEDIN);
         Context context = view.getContext();
         context.startActivity(new Intent(context, MainActivity.class));
     }

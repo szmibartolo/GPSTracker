@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import pl.wsb.szmibartolo.bartosz.gpstracker.models.Stan;
 import pl.wsb.szmibartolo.bartosz.gpstracker.models.User;
 
 /**
@@ -14,6 +15,8 @@ public class SharedPreferencesStorage {
 
     private static final String USER_KEY_LOGIN = "USER_KEY_LOGIN";
     private static final String USER_KEY_PASS = "USER_KEY_PASS";
+    private static final String STAN_KEY = "STAN_KEY";
+
     private Activity activity;
 
     public SharedPreferencesStorage(Activity activity) {
@@ -28,8 +31,7 @@ public class SharedPreferencesStorage {
         editor.commit();
     }
 
-
-    public User loadUser(){
+    public User loadUser() {
         SharedPreferences sharedPref = activity.getPreferences(Context.MODE_PRIVATE);
 
         User user = new User();
@@ -39,4 +41,20 @@ public class SharedPreferencesStorage {
         return user;
     }
 
+    public void saveStan(Stan stan) {
+        SharedPreferences sharedPref = activity.getPreferences(Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPref.edit();
+        int s = stan.ordinal();
+        editor.putInt(STAN_KEY, s);
+        editor.commit();
+
+    }
+
+    public Stan loadStan() {
+        SharedPreferences sharedPref = activity.getPreferences(Context.MODE_PRIVATE);
+
+        int s = sharedPref.getInt(STAN_KEY, 0);
+
+        return Stan.values()[s];
+    }
 }
