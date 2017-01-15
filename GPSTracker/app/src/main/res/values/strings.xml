@@ -21,4 +21,5 @@
     <string name="end_work">End Work</string>
     <string name="go_to_break">go to break</string>
     <string name="end_break">end break</string>
+    <string name="cant_log_in">Can not log in</string>
 </resources>

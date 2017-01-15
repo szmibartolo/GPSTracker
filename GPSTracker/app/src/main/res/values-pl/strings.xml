@@ -21,4 +21,9 @@
     <string name="end_work">End Work</string>
     <string name="go_to_break">go to break</string>
     <string name="end_break">end break</string>
+    <string name="cant_log_in">Nie można się zalogować</string>
+    <string name="network_is_on">Network is Enabled in your devide</string>
+    <string name="network_is_off">Network is Disabled in your devide</string>
+    <string name="gps_is_on">GPS is Enabled in your devide</string>
+    <string name="gps_is_off">GPS is Disabled in your devide</string>
 </resources>
