@@ -16,10 +16,6 @@ import pl.wsb.szmibartolo.bartosz.gpstracker.storage.SharedPreferencesStorage;
 import pl.wsb.szmibartolo.bartosz.gpstracker.utils.GPSController;
 import pl.wsb.szmibartolo.bartosz.gpstracker.utils.Http;
 
-/**
- * Created by Maciej on 2016-12-12.
- */
-
 public class MainViewModel {
 
     public ObservableBoolean isVisibleStartWorkButton = new ObservableBoolean();
@@ -27,12 +23,14 @@ public class MainViewModel {
     public ObservableBoolean isVisibleStartBreakButton = new ObservableBoolean();
     public ObservableBoolean isVisibleEndBreakButton = new ObservableBoolean();
 
+    private SharedPreferencesStorage sharedPreferencesStorage;
 
     private Stan stan;
     private User user;
     private GPSController gpsController;
 
     public MainViewModel(SharedPreferencesStorage sharedPreferencesStorage) {
+        this.sharedPreferencesStorage = sharedPreferencesStorage;
         stan = sharedPreferencesStorage.loadStan();
         user = sharedPreferencesStorage.loadUser();
         gpsController = new GPSController(user.getToken());
@@ -40,8 +38,7 @@ public class MainViewModel {
     }
 
     public void onStartWorkButtonClick(View view) {
-        stan = Stan.ATWORK;
-        updateButtonsVisibility(stan);
+        updateStan(Stan.ATWORK);
 
         gpsController.registerLocationUpdate(view.getContext());
         Location location = getLocation(view.getContext());
@@ -50,8 +47,7 @@ public class MainViewModel {
     }
 
     public void onEndWorkButtonClick(View view) {
-        stan = Stan.LOGGEDIN;
-        updateButtonsVisibility(stan);
+        updateStan(Stan.LOGGEDIN);
 
         Location location = getLocation(view.getContext());
         Http http = new Http();
@@ -61,8 +57,7 @@ public class MainViewModel {
     }
 
     public void onStartBreakButtonClick(View view) {
-        stan = Stan.ONBREAK;
-        updateButtonsVisibility(stan);
+        updateStan(Stan.ONBREAK);
 
         Location location = getLocation(view.getContext());
         Http http = new Http();
@@ -70,8 +65,7 @@ public class MainViewModel {
     }
 
     public void onEndBreakButtonClick(View view) {
-        stan = Stan.ATWORK;
-        updateButtonsVisibility(stan);
+        updateStan(Stan.ATWORK);
 
         Location location = getLocation(view.getContext());
         Http http = new Http();
@@ -86,7 +80,7 @@ public class MainViewModel {
     }
 
     private Location getLocation(Context context) {
-        if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+        if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             // TODO: Consider calling
             //    ActivityCompat#requestPermissions
             // here to request the missing permissions, and then overriding
@@ -100,4 +94,11 @@ public class MainViewModel {
 
         return location;
     }
+
+    private void updateStan(Stan inputStan) {
+        stan = inputStan;
+        sharedPreferencesStorage.saveStan(stan);
+        updateButtonsVisibility(stan);
+    }
+
 }

@@ -10,10 +10,6 @@ import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.util.Log;
 
-/**
- * Created by Grzegorz on 15-01-2017.
- */
-
 public class GPSController {
 
     LocationManager locationManager;
@@ -53,7 +49,6 @@ public class GPSController {
 
 
     public void registerLocationUpdate(final Context context) {
-        getLocationManager(context);
         if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             // TODO: Consider calling
             //    ActivityCompat#requestPermissions
@@ -64,6 +59,7 @@ public class GPSController {
             // for ActivityCompat#requestPermissions for more details.
             return;
         }
+        getLocationManager(context);
         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, Config.CHECK_TIME, 0, locationListener);
     }
 

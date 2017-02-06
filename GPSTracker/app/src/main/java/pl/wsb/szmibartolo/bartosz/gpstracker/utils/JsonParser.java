@@ -3,9 +3,6 @@ package pl.wsb.szmibartolo.bartosz.gpstracker.utils;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-/**
- * Created by Grzegorz on 15-01-2017.
- */
 
 public class JsonParser {
 

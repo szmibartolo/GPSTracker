@@ -33,7 +33,7 @@ public class LoginViewModel {
         user = sharedPreferencesStorage.loadUser();
         stan = sharedPreferencesStorage.loadStan();
 
-        if (stan == Stan.LOGGEDIN) {
+        if (stan == Stan.NOTLOGGEDIN) {
             // to do load next activity
         }
 
@@ -60,7 +60,8 @@ public class LoginViewModel {
                     if (httpCode == 200 || httpCode == 201) {
                         user = new User(login.get(), password.get(), token);
                         sharedPreferencesStorage.saveUser(user);
-                        sharedPreferencesStorage.saveStan(Stan.LOGGEDIN);
+                        if (stan == Stan.NOTLOGGEDIN)
+                            sharedPreferencesStorage.saveStan(Stan.LOGGEDIN);
                         Context context = view.getContext();
                         context.startActivity(new Intent(context, MainActivity.class));
                     } else {

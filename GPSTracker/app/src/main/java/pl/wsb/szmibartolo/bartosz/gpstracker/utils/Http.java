@@ -9,16 +9,14 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.JSONException;
-import org.json.JSONObject;
+import org.threeten.bp.LocalDateTime;
 
+import java.io.BufferedReader;
 import java.io.InputStream;
-import java.net.URLEncoder;
-import java.util.Calendar;
+import java.io.InputStreamReader;
 import java.util.zip.GZIPInputStream;
 
-/**
- * Created by Grzegorz on 15-01-2017.
- */
+import pl.wsb.szmibartolo.bartosz.gpstracker.models.ServiceState;
 
 public class Http {
 
@@ -28,17 +26,18 @@ public class Http {
 
         HttpUriRequest httpUriRequest = new HttpGet(stringBuilder.toString());
         httpUriRequest.addHeader("Accept-Encoding", "gzip");
-        httpUriRequest.addHeader("x-auth-login", user);
-        httpUriRequest.addHeader("x-auth-pass", password);
+        httpUriRequest.addHeader("X-Auth-Username", user);
+        httpUriRequest.addHeader("X-Auth-Password", password);
 
         sendRequest(httpUriRequest, listener);
     }
 
     public void sendData(String token, double latitude, double longitude, String type, HttpResultInterface listener) {
+        if (type == null) type = ServiceState.SEND_GPS.name().toString();
         StringBuilder stringBuilder = new StringBuilder(Config.URL);
         stringBuilder.append("work?");
         stringBuilder.append("date=");
-        stringBuilder.append(URLEncoder.encode(Calendar.getInstance().getTime().toString()));
+        stringBuilder.append(LocalDateTimeFormatter.parse(LocalDateTime.now()));
         stringBuilder.append("&lat=");
         stringBuilder.append(latitude);
         stringBuilder.append("&long=");
@@ -50,7 +49,7 @@ public class Http {
 
         HttpUriRequest httpUriRequest = new HttpGet(stringBuilder.toString());
         httpUriRequest.addHeader("Accept-Encoding", "gzip");
-        httpUriRequest.addHeader("x-auth-token", token);
+        httpUriRequest.addHeader("X-Auth-Token", token);
 
         sendRequest(httpUriRequest, listener);
     }
@@ -94,13 +93,20 @@ public class Http {
                             if (contentEncoding != null && contentEncoding.getValue().equalsIgnoreCase("gzip")) {
                                 inputStream = new GZIPInputStream(inputStream);
                             }
+String line;
+                            String json = "";
+                            BufferedReader rd = new BufferedReader(new InputStreamReader(inputStream, "UTF-8"));
+                            while ((line = rd.readLine()) != null) {
+                                json += line;
+                            }
+                            rd.close();
 
-                            byte[] bytes = new byte[Integer.parseInt(contentLength.getValue())];
-                            inputStream.read(bytes);
-                            inputStream.close();
+//                            byte[] bytes = new byte[Integer.parseInt(contentLength.getValue())];
+//                            inputStream.read(bytes);
+//                            inputStream.close();
 
                             JsonParser parser = new JsonParser();
-                            String token = parser.parse(bytes);
+                            String token = parser.parse(json);
 
                             if (listener != null) {
                                 listener.onResult(code, token);
