@@ -7,4 +7,6 @@ public interface LoggedUserStorage {
     Token getTokenForUser(User user);
 
     boolean logout(Token token);
+
+    User getUser(Token token);
 }

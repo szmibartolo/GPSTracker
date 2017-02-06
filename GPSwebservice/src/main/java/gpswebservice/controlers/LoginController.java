@@ -1,11 +1,10 @@
 package gpswebservice.controlers;
 
-import com.sun.deploy.net.HttpResponse;
+import gpswebservice.controlers.errors.UnauthorazedException;
 import gpswebservice.controlers.errors.UserNotFoundException;
 import gpswebservice.ioc.Ioc;
 import gpswebservice.model.Token;
 import gpswebservice.storage.UserStorage;
-import org.springframework.boot.context.config.ResourceNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -38,7 +37,7 @@ public class LoginController {
 
         Token token = new Token(xtoken);
         if(!userStorage.logoutUser(token)) {
-            throw new UserNotFoundException();
+            throw new UnauthorazedException();
         }
     }
 }

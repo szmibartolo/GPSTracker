@@ -32,4 +32,12 @@ public class MemoryLoggedUserStorage implements LoggedUserStorage {
             return false;
         }
     }
+
+    @Override
+    public User getUser(Token token) {
+        if (userMap.containsKey(token))
+            return userMap.get(token);
+
+        return null;
+    }
 }
