@@ -16,6 +16,7 @@ public class SharedPreferencesStorage {
 
     private static final String USER_KEY_LOGIN = "USER_KEY_LOGIN";
     private static final String USER_KEY_PASS = "USER_KEY_PASS";
+    private static final String USER_KEY_TOKEN = "USER_TOKEN";
     private static final String STAN_KEY = "STAN_KEY";
 
     private Context context;
@@ -29,6 +30,7 @@ public class SharedPreferencesStorage {
         SharedPreferences.Editor editor = sharedPref.edit();
         editor.putString(USER_KEY_LOGIN, user.getLogin());
         editor.putString(USER_KEY_PASS, user.getPassword());
+        editor.putString(USER_KEY_TOKEN, user.getToken());
         editor.commit();
     }
 
@@ -38,6 +40,7 @@ public class SharedPreferencesStorage {
         User user = new User();
         user.setLogin(sharedPref.getString(USER_KEY_LOGIN, ""));
         user.setPassword(sharedPref.getString(USER_KEY_PASS, ""));
+        user.setToken(sharedPref.getString(USER_KEY_TOKEN, ""));
 
         return user;
     }

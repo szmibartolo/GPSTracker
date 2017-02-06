@@ -5,11 +5,16 @@ import android.content.Intent;
 import android.databinding.ObservableBoolean;
 import android.databinding.ObservableField;
 import android.view.View;
+import android.widget.Toast;
 
 import pl.wsb.szmibartolo.bartosz.gpstracker.MainActivity;
+import pl.wsb.szmibartolo.bartosz.gpstracker.R;
 import pl.wsb.szmibartolo.bartosz.gpstracker.models.Stan;
 import pl.wsb.szmibartolo.bartosz.gpstracker.models.User;
 import pl.wsb.szmibartolo.bartosz.gpstracker.storage.SharedPreferencesStorage;
+import pl.wsb.szmibartolo.bartosz.gpstracker.utils.Http;
+import pl.wsb.szmibartolo.bartosz.gpstracker.utils.HttpResultInterface;
+import pl.wsb.szmibartolo.bartosz.gpstracker.utils.Utils;
 
 /**
  * Created by Maciej on 2016-12-12.
@@ -50,12 +55,29 @@ public class LoginViewModel {
         password.addOnPropertyChangedCallback(editTextPropertyListener);
     }
 
-    public void onClickLoginButton(View view) {
-        user = new User(login.get(), password.get());
-        sharedPreferencesStorage.saveUser(user);
-sharedPreferencesStorage.saveStan(Stan.LOGGEDIN);
-        Context context = view.getContext();
-        context.startActivity(new Intent(context, MainActivity.class));
+    public void onClickLoginButton(final View view) {
+        if(Utils.isNetworkConnected(view.getContext()) && Utils.isGPSConnected(view.getContext())) {
+            Http http = new Http();
+            http.login(login.get(), password.get(), new HttpResultInterface() {
+                @Override
+                public void onResult(int httpCode, String token) {
+                    if (httpCode == 200 || httpCode == 201) {
+                        user = new User(login.get(), password.get(), token);
+                        sharedPreferencesStorage.saveUser(user);
+                        sharedPreferencesStorage.saveStan(Stan.LOGGEDIN);
+                        Context context = view.getContext();
+                        context.startActivity(new Intent(context, MainActivity.class));
+                    } else {
+                        view.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                Toast.makeText(view.getContext(), view.getResources().getText(R.string.cant_log_in), Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                    }
+                }
+            });
+        }
     }
 
     private void updateLoginButton() {
