@@ -16,10 +16,6 @@ import pl.wsb.szmibartolo.bartosz.gpstracker.utils.Http;
 import pl.wsb.szmibartolo.bartosz.gpstracker.utils.HttpResultInterface;
 import pl.wsb.szmibartolo.bartosz.gpstracker.utils.Utils;
 
-/**
- * Created by Maciej on 2016-12-12.
- */
-
 public class LoginViewModel {
 
     private final android.databinding.Observable.OnPropertyChangedCallback editTextPropertyListener;
